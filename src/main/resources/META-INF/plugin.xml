@@ -2,16 +2,7 @@
     <id>com.custom.plugin.mylog</id>
     <name>MyLog</name>
     <vendor>Custom</vendor>
-    <description><![CDATA[
-    <h2>MyLog - 一键生成日志打印</h2>
-    <p>选中代码变量，右键一键生成日志打印代码。</p>
-    <ul>
-        <li>自动获取文件名、行号、变量名</li>
-        <li>JS/TS：生成 <code>console.log</code> 模板</li>
-        <li>Java：生成 <code>log.info</code> 模板</li>
-        <li>支持自定义日志模板（Settings → Tools → MyLog）</li>
-    </ul>
-    ]]></description>
+    <description>One-click log statement generation for Java and JavaScript/TypeScript development. Select any variable and generate a log statement with file name, line number, and variable name automatically filled in. Supports customizable log templates through Settings | Tools | MyLog.</description>
 
     <tags>logging,debug,console.log,log,it</tags>
 

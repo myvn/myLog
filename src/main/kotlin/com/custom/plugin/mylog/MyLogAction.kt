@@ -27,14 +27,15 @@ class MyLogAction : AnAction() {
 
         val logStatement = "console.log(\"$fileName:$lineNum\", $selectedText);\n"
 
-        WriteCommandAction.runWriteCommandAction(project) {
+        WriteCommandAction.runWriteCommandAction(project, "Insert MyLog statement", null, Runnable {
             if (insertLine < document.lineCount) {
                 val lineStartOffset = document.getLineStartOffset(insertLine)
                 document.insertString(lineStartOffset, logStatement)
             } else {
-                document.insertString(document.textLength, logStatement)
+                val prefix = if (document.textLength > 0 && !document.text.endsWith("\n")) "\n" else ""
+                document.insertString(document.textLength, "$prefix$logStatement")
             }
-        }
+        })
 
         editor.caretModel.moveToOffset(
             document.getLineStartOffset(insertLine.coerceAtMost(document.lineCount - 1))

@@ -2,9 +2,29 @@
     <id>com.custom.plugin.mylog</id>
     <name>MyLog</name>
     <vendor>Custom</vendor>
-    <description>复刻 LogIt 日志插件，兼容新版 IDE，一键生成代码日志</description>
+    <description><![CDATA[
+    <h2>MyLog - 一键生成日志打印</h2>
+    <p>选中代码变量，右键一键生成日志打印代码。</p>
+    <ul>
+        <li>自动获取文件名、行号、变量名</li>
+        <li>JS/TS：生成 <code>console.log</code> 模板</li>
+        <li>Java：生成 <code>log.info</code> 模板</li>
+        <li>支持自定义日志模板（Settings → Tools → MyLog）</li>
+    </ul>
+    ]]></description>
+
+    <tags>logging,debug,console.log,log,it</tags>
 
     <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.custom.plugin.mylog.MyLogSettingsConfigurable"
+                id="com.custom.plugin.mylog.MyLogSettingsConfigurable"
+                displayName="MyLog"/>
+        <applicationService serviceImplementation="com.custom.plugin.mylog.MyLogSettings"/>
+    </extensions>
 
     <actions>
         <action

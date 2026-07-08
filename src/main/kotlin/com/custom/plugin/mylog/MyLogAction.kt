@@ -25,7 +25,15 @@ class MyLogAction : AnAction() {
         val fileName = e.getData(CommonDataKeys.VIRTUAL_FILE)?.name ?: "Unknown"
         val lineNum = startLine + 1
 
-        val logStatement = "console.log(\"$fileName:$lineNum\", $selectedText);\n"
+        val settings = MyLogSettings.instance
+        val isJavaFile = e.getData(CommonDataKeys.VIRTUAL_FILE)?.name?.endsWith(".java") == true
+        val template = if (isJavaFile) settings.javaTemplate else settings.jsTemplate
+
+        val logStatement = template
+            .replace("\${file}", fileName)
+            .replace("\${line}", lineNum.toString())
+            .replace("\${var}", selectedText)
+            .replace("\${class}", fileName.removeSuffix(".java")) + "\n"
 
         WriteCommandAction.runWriteCommandAction(project, "Insert MyLog statement", null, Runnable {
             if (insertLine < document.lineCount) {

@@ -1,0 +1,19 @@
+<idea-plugin>
+    <id>com.custom.plugin.mylog</id>
+    <name>MyLog</name>
+    <vendor>Custom</vendor>
+    <description>复刻 LogIt 日志插件，兼容新版 IDE，一键生成代码日志</description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <actions>
+        <action
+            id="com.custom.plugin.mylog.MyLogAction"
+            class="com.custom.plugin.mylog.MyLogAction"
+            text="生成日志打印"
+            description="在选中内容下一行生成 console.log 日志">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <keyboard-shortcut first-keystroke="alt L" keymap="$default"/>
+        </action>
+    </actions>
+</idea-plugin>

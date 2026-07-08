@@ -1,0 +1,49 @@
+package com.custom.plugin.mylog
+
+import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.editor.Editor
+
+class MyLogAction : AnAction() {
+
+    override fun actionPerformed(e: AnActionEvent) {
+        val editor = e.getData(CommonDataKeys.EDITOR) ?: return
+        val project = e.project ?: return
+
+        val selectionModel = editor.selectionModel
+        val selectedText = selectionModel.selectedText ?: return
+
+        val document = editor.document
+        val selectionStart = selectionModel.selectionStart
+        val selectionEnd = selectionModel.selectionEnd
+
+        val startLine = document.getLineNumber(selectionStart)
+        val insertLine = document.getLineNumber(selectionEnd) + 1
+
+        val fileName = e.getData(CommonDataKeys.VIRTUAL_FILE)?.name ?: "Unknown"
+        val lineNum = startLine + 1
+
+        val logStatement = "console.log(\"$fileName:$lineNum\", $selectedText);\n"
+
+        WriteCommandAction.runWriteCommandAction(project) {
+            if (insertLine < document.lineCount) {
+                val lineStartOffset = document.getLineStartOffset(insertLine)
+                document.insertString(lineStartOffset, logStatement)
+            } else {
+                document.insertString(document.textLength, logStatement)
+            }
+        }
+
+        editor.caretModel.moveToOffset(
+            document.getLineStartOffset(insertLine.coerceAtMost(document.lineCount - 1))
+        )
+    }
+
+    override fun update(e: AnActionEvent) {
+        val editor = e.getData(CommonDataKeys.EDITOR)
+        val hasSelection = editor?.selectionModel?.hasSelection() == true
+        e.presentation.isVisible = hasSelection
+    }
+}

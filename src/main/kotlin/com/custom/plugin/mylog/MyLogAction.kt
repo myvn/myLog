@@ -20,7 +20,8 @@ class MyLogAction : AnAction() {
         val selectionEnd = selectionModel.selectionEnd
 
         val startLine = document.getLineNumber(selectionStart)
-        val insertLine = document.getLineNumber(selectionEnd) + 1
+        val endLine = document.getLineNumber(selectionEnd)
+        val insertLine = if (endLine == startLine) startLine + 1 else endLine + 1
 
         val fileName = e.getData(CommonDataKeys.VIRTUAL_FILE)?.name ?: "Unknown"
         val lineNum = startLine + 1

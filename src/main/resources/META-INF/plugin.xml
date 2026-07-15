@@ -2,9 +2,7 @@
     <id>com.custom.plugin.mylog</id>
     <name>MyLog</name>
     <vendor>Custom</vendor>
-    <description>One-click log statement generation for Java and JavaScript/TypeScript development. Select any variable and generate a log statement with file name, line number, and variable name automatically filled in. Supports customizable log templates through Settings | Tools | MyLog.</description>
-
-    <tags>logging,debug,console.log,log,it</tags>
+    <description>One-click log statement generation for Java, Kotlin, JavaScript/TypeScript, and Python development. Select any variable and generate a log statement with file name, line number, and variable name automatically filled in. Supports customizable log templates through Settings | Tools | MyLog.</description>
 
     <depends>com.intellij.modules.platform</depends>
 
@@ -22,7 +20,7 @@
             id="com.custom.plugin.mylog.MyLogAction"
             class="com.custom.plugin.mylog.MyLogAction"
             text="生成日志打印"
-            description="在选中内容下一行生成 console.log 日志">
+            description="在选中内容下一行插入日志打印语句">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
             <keyboard-shortcut first-keystroke="alt L" keymap="$default"/>
         </action>

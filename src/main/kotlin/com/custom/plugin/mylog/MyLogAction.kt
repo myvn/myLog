@@ -3,8 +3,22 @@ package com.custom.plugin.mylog
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
+
+private fun findDeclarationEnd(document: Document, startLine: Int): Int {
+    for (line in startLine until document.lineCount) {
+        val lineStartOffset = document.getLineStartOffset(line)
+        val lineEndOffset = document.getLineEndOffset(line)
+        val lineText = document.getText(TextRange(lineStartOffset, lineEndOffset)).trimEnd()
+        if (lineText.endsWith(";") || lineText.endsWith("}")) {
+            return line + 1
+        }
+    }
+    return startLine + 1
+}
 
 class MyLogAction : AnAction() {
 
@@ -17,24 +31,41 @@ class MyLogAction : AnAction() {
 
         val document = editor.document
         val selectionStart = selectionModel.selectionStart
-        val selectionEnd = selectionModel.selectionEnd
 
         val startLine = document.getLineNumber(selectionStart)
-        val endLine = document.getLineNumber(selectionEnd)
-        val insertLine = if (endLine == startLine) startLine + 1 else endLine + 1
+
+        // Find the end of the declaration by scanning for ';' or standalone '}' from startLine onwards
+        val insertLine = findDeclarationEnd(document, startLine)
+
 
         val fileName = e.getData(CommonDataKeys.VIRTUAL_FILE)?.name ?: "Unknown"
-        val lineNum = startLine + 1
+        val lineNum = insertLine + 1
+        val fileExt = fileName.substringAfterLast('.', "")
 
         val settings = MyLogSettings.instance
-        val isJavaFile = e.getData(CommonDataKeys.VIRTUAL_FILE)?.name?.endsWith(".java") == true
-        val template = if (isJavaFile) settings.javaTemplate else settings.jsTemplate
+        val template = when (fileExt) {
+            "java" -> settings.javaTemplate
+            "kt", "kts" -> settings.kotlinTemplate
+            "py" -> settings.pythonTemplate
+            else -> settings.jsTemplate
+        }
+
+        // Preserve indentation from the original selection line
+        val originalLineStart = document.getLineStartOffset(startLine)
+        val originalLineText = document.getText(
+            TextRange(originalLineStart, document.getLineEndOffset(startLine))
+        )
+        val indentation = originalLineText.takeWhile { it.isWhitespace() }
 
         val logStatement = template
             .replace("\${file}", fileName)
             .replace("\${line}", lineNum.toString())
             .replace("\${var}", selectedText)
-            .replace("\${class}", fileName.removeSuffix(".java")) + "\n"
+            .replace("\${class}", fileName.removeSuffix(".java"))
+            .lineSequence()
+            .joinToString("\n") { line ->
+                if (line.isEmpty()) "" else "$indentation$line"
+            } + "\n"
 
         WriteCommandAction.runWriteCommandAction(project, "Insert MyLog statement", null, Runnable {
             if (insertLine < document.lineCount) {

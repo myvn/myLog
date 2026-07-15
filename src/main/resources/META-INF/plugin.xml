@@ -2,7 +2,7 @@
     <id>com.custom.plugin.mylog</id>
     <name>MyLog</name>
     <vendor>Custom</vendor>
-    <description>One-click log statement generation for Java, Kotlin, JavaScript/TypeScript, and Python development. Select any variable and generate a log statement with file name, line number, and variable name automatically filled in. Supports customizable log templates through Settings | Tools | MyLog.</description>
+    <description>One-click log statement generation for Java, Kotlin, JavaScript/TypeScript, Python, Go, and PHP development. Select any variable and generate a log statement with file name, line number, and variable name automatically filled in. Supports customizable log templates through Settings | Tools | MyLog.</description>
 
     <depends>com.intellij.modules.platform</depends>
 

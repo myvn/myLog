@@ -16,6 +16,8 @@ class MyLogSettings : PersistentStateComponent<MyLogSettings> {
     var javaTemplate: String = "log.info(\"[MyLog][\${class}:\${line}] \${var} = {}\", \${var});"
     var kotlinTemplate: String = "log.info(\"[MyLog][\${class}:\${line}] \${var} = \$\${var}\")"
     var pythonTemplate: String = "print(f\"[MyLog][\${file}:\${line}] \${var} = {\${var}}\")"
+    var goTemplate: String = "fmt.Printf(\"[MyLog][\${file}:\${line}] \${var} = %+v\\n\", \${var})"
+    var phpTemplate: String = "error_log(\"[MyLog][\${file}:\${line}] \${var} = \" . \${var});"
 
     override fun getState(): MyLogSettings = this
 

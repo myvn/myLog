@@ -12,6 +12,8 @@ class MyLogSettingsConfigurable : Configurable {
     private val javaTemplateField = JBTextArea(5, 40)
     private val kotlinTemplateField = JBTextArea(5, 40)
     private val pythonTemplateField = JBTextArea(5, 40)
+    private val goTemplateField = JBTextArea(5, 40)
+    private val phpTemplateField = JBTextArea(5, 40)
 
     override fun getDisplayName(): String = "MyLog"
 
@@ -24,6 +26,10 @@ class MyLogSettingsConfigurable : Configurable {
         kotlinTemplateField.wrapStyleWord = true
         pythonTemplateField.lineWrap = true
         pythonTemplateField.wrapStyleWord = true
+        goTemplateField.lineWrap = true
+        goTemplateField.wrapStyleWord = true
+        phpTemplateField.lineWrap = true
+        phpTemplateField.wrapStyleWord = true
 
         return panel {
             row {
@@ -54,6 +60,20 @@ class MyLogSettingsConfigurable : Configurable {
                     .resizableColumn()
                     .comment("可用变量：\${file}, \${line}, \${var}")
             }
+            row {
+                label("Go 模板：")
+                cell(goTemplateField)
+                    .align(AlignX.FILL)
+                    .resizableColumn()
+                    .comment("可用变量：\${file}, \${line}, \${var}")
+            }
+            row {
+                label("PHP 模板：")
+                cell(phpTemplateField)
+                    .align(AlignX.FILL)
+                    .resizableColumn()
+                    .comment("可用变量：\${file}, \${line}, \${var}")
+            }
         }
     }
 
@@ -62,7 +82,9 @@ class MyLogSettingsConfigurable : Configurable {
         return jsTemplateField.text != settings.jsTemplate ||
                 javaTemplateField.text != settings.javaTemplate ||
                 kotlinTemplateField.text != settings.kotlinTemplate ||
-                pythonTemplateField.text != settings.pythonTemplate
+                pythonTemplateField.text != settings.pythonTemplate ||
+                goTemplateField.text != settings.goTemplate ||
+                phpTemplateField.text != settings.phpTemplate
     }
 
     override fun apply() {
@@ -71,6 +93,8 @@ class MyLogSettingsConfigurable : Configurable {
         settings.javaTemplate = javaTemplateField.text
         settings.kotlinTemplate = kotlinTemplateField.text
         settings.pythonTemplate = pythonTemplateField.text
+        settings.goTemplate = goTemplateField.text
+        settings.phpTemplate = phpTemplateField.text
     }
 
     override fun reset() {
@@ -79,5 +103,7 @@ class MyLogSettingsConfigurable : Configurable {
         javaTemplateField.text = settings.javaTemplate
         kotlinTemplateField.text = settings.kotlinTemplate
         pythonTemplateField.text = settings.pythonTemplate
+        goTemplateField.text = settings.goTemplate
+        phpTemplateField.text = settings.phpTemplate
     }
 }

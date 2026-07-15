@@ -47,6 +47,8 @@ class MyLogAction : AnAction() {
             "java" -> settings.javaTemplate
             "kt", "kts" -> settings.kotlinTemplate
             "py" -> settings.pythonTemplate
+            "go" -> settings.goTemplate
+            "php" -> settings.phpTemplate
             else -> settings.jsTemplate
         }
 

@@ -3,22 +3,8 @@ package com.custom.plugin.mylog
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.editor.Document
-import com.intellij.openapi.editor.Editor
-
-private fun findDeclarationEnd(document: Document, startLine: Int): Int {
-    for (line in startLine until document.lineCount) {
-        val lineStartOffset = document.getLineStartOffset(line)
-        val lineEndOffset = document.getLineEndOffset(line)
-        val lineText = document.getText(TextRange(lineStartOffset, lineEndOffset)).trimEnd()
-        if (lineText.endsWith(";") || lineText.endsWith("}")) {
-            return line + 1
-        }
-    }
-    return startLine + 1
-}
+import com.intellij.openapi.util.TextRange
 
 class MyLogAction : AnAction() {
 
@@ -30,13 +16,10 @@ class MyLogAction : AnAction() {
         val selectedText = selectionModel.selectedText ?: return
 
         val document = editor.document
-        val selectionStart = selectionModel.selectionStart
+        val selectionEnd = selectionModel.selectionEnd
 
-        val startLine = document.getLineNumber(selectionStart)
-
-        // Find the end of the declaration by scanning for ';' or standalone '}' from startLine onwards
-        val insertLine = findDeclarationEnd(document, startLine)
-
+        val endLine = document.getLineNumber(selectionEnd)
+        val insertLine = endLine + 1
 
         val fileName = e.getData(CommonDataKeys.VIRTUAL_FILE)?.name ?: "Unknown"
         val lineNum = insertLine + 1
@@ -52,12 +35,11 @@ class MyLogAction : AnAction() {
             else -> settings.jsTemplate
         }
 
-        // Preserve indentation from the original selection line
-        val originalLineStart = document.getLineStartOffset(startLine)
-        val originalLineText = document.getText(
-            TextRange(originalLineStart, document.getLineEndOffset(startLine))
-        )
-        val indentation = originalLineText.takeWhile { it.isWhitespace() }
+        // Use indentation of the insert line (next line after selection)
+        val insertLineStart = if (insertLine < document.lineCount) document.getLineStartOffset(insertLine) else 0
+        val insertLineEnd = if (insertLine < document.lineCount) document.getLineEndOffset(insertLine) else insertLineStart
+        val insertLineText = document.getText(TextRange(insertLineStart, insertLineEnd))
+        val indentation = insertLineText.takeWhile { it.isWhitespace() }
 
         val logStatement = template
             .replace("\${file}", fileName)

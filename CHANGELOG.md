@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+## [1.3.0] - 2026-07-17
+
+### Fixed / 修复
+- Simplify log insert logic to next line after selection
+  简化日志插入逻辑，统一在选中内容下一行插入
+- Set `untilBuild` to `null` instead of empty string
+  `untilBuild` 改为 `null` 以避免 IDE 版本上限问题
+
 ## [1.2.0] - 2026-07-15
 
 ### Added / 新增
@@ -63,7 +71,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/my/MyLog/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/my/MyLog/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/my/MyLog/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/my/MyLog/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/my/MyLog/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/my/MyLog/compare/v1.0.0...v1.0.1
